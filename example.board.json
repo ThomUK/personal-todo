@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "tasks": [
+    {
+      "id": "example001",
+      "title": "Fix the back gate latch",
+      "description": "The latch has been stiff since winter — needs WD-40 or replacement.",
+      "domain": "home",
+      "status": "todo",
+      "dueDate": null,
+      "createdAt": "2026-04-01T09:00:00.000Z",
+      "updatedAt": "2026-04-01T09:00:00.000Z"
+    },
+    {
+      "id": "example002",
+      "title": "Submit Q1 expenses",
+      "description": "",
+      "domain": "work",
+      "status": "in-progress",
+      "dueDate": "2026-04-30",
+      "createdAt": "2026-04-10T08:30:00.000Z",
+      "updatedAt": "2026-04-15T11:00:00.000Z"
+    },
+    {
+      "id": "example003",
+      "title": "Add dark mode",
+      "description": "Use prefers-color-scheme media query. Define a second set of CSS custom properties.",
+      "domain": "apps",
+      "status": "todo",
+      "dueDate": null,
+      "createdAt": "2026-04-12T20:00:00.000Z",
+      "updatedAt": "2026-04-12T20:00:00.000Z"
+    },
+    {
+      "id": "example004",
+      "title": "Book dentist appointment",
+      "description": "",
+      "domain": "home",
+      "status": "todo",
+      "dueDate": "2026-05-01",
+      "createdAt": "2026-04-14T07:45:00.000Z",
+      "updatedAt": "2026-04-14T07:45:00.000Z"
+    },
+    {
+      "id": "example005",
+      "title": "Prepare demo for client",
+      "description": "Cover the new reporting dashboard. Slides in Google Drive.",
+      "domain": "work",
+      "status": "done",
+      "dueDate": "2026-04-17",
+      "createdAt": "2026-04-07T09:00:00.000Z",
+      "updatedAt": "2026-04-17T14:00:00.000Z"
+    },
+    {
+      "id": "example006",
+      "title": "Implement offline support",
+      "description": "",
+      "domain": "apps",
+      "status": "done",
+      "dueDate": null,
+      "createdAt": "2026-03-20T10:00:00.000Z",
+      "updatedAt": "2026-04-02T16:30:00.000Z"
+    }
+  ]
+}
