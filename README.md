@@ -1,4 +1,4 @@
-# Tom's ToDo
+# Personal Todo
 
 A personal kanban and todo app that stores its data as a JSON file committed to a GitHub repository. No backend, no database — just a static web app and two GitHub repos.
 
@@ -41,7 +41,7 @@ The app stores your token in `localStorage` in your browser. It is never sent an
 | **Domain** | All · Home · Work · Apps |
 | **Timings** | Show all · Due dated · Incomplete |
 
-- Click the **Tom's ToDo** heading to reset all filters to their defaults (List / Incomplete / All)
+- Click the **Personal Todo** heading to reset all filters to their defaults (List / Incomplete / All)
 
 ### Adding and editing tasks
 - Click **+ Add Task** or press `n` to open the task form
