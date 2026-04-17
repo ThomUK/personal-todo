@@ -12,6 +12,7 @@ let sha = null;
 let saving = false;
 let filterDomains = new Set(DOMAINS);
 let activeView = 'kanban';
+let showCompleted = false;
 let editingId = null;
 let draggedId = null;
 
@@ -151,7 +152,7 @@ function renderKanban() {
 // ── List ──────────────────────────────────────────────────────────────────────
 
 function renderList() {
-  const ft = filteredTasks();
+  const ft = filteredTasks().filter(t => showCompleted || t.status !== 'done');
   const tbody = document.getElementById('list-tbody');
   if (!ft.length) {
     tbody.innerHTML = '<tr><td colspan="4" class="empty-cell">No tasks</td></tr>';
@@ -471,6 +472,11 @@ function setupEvents() {
     cfg = newCfg;
     document.getElementById('setup-dialog').close();
     await initApp();
+  });
+
+  document.getElementById('show-completed-toggle').addEventListener('change', e => {
+    showCompleted = e.target.checked;
+    renderList();
   });
 
   document.getElementById('cancel-setup-btn')?.addEventListener('click', () => {

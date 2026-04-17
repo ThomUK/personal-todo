@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Personal kanban board backed by GitHub">
   <meta name="theme-color" content="#4f46e5">
-  <title>Kanban</title>
+  <title>Tom's ToDo</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -91,7 +91,7 @@
 
     <header class="app-header">
       <div class="header-top">
-        <h1 class="app-title">Kanban</h1>
+        <h1 class="app-title">Tom's ToDo</h1>
         <div class="header-actions">
           <button id="add-task-btn" class="btn btn-primary">+ Add Task</button>
           <button id="settings-btn" class="btn btn-ghost" aria-label="Settings">⚙</button>
@@ -160,6 +160,12 @@
 
       <!-- List view -->
       <div id="list-view" class="view" hidden>
+        <div class="list-toolbar">
+          <label class="toggle-label">
+            <input type="checkbox" id="show-completed-toggle">
+            Show completed
+          </label>
+        </div>
         <table class="task-table" aria-label="All tasks">
           <thead>
             <tr>
