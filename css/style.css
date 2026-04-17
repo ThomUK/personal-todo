@@ -193,7 +193,11 @@ textarea { resize: vertical; min-height: 80px; }
   font-size: 1.125rem;
   font-weight: 700;
   letter-spacing: -.02em;
+  cursor: pointer;
+  user-select: none;
 }
+
+.app-title:hover { opacity: .75; }
 
 .header-actions { display: flex; gap: 0.5rem; align-items: center; }
 

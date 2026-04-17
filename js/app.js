@@ -245,7 +245,7 @@ function setDomainFilter(domain) {
 }
 
 function updateFilterButtons() {
-  document.querySelectorAll('.filter-btn').forEach(btn => {
+  document.querySelectorAll('.domain-filter .filter-btn').forEach(btn => {
     const d = btn.dataset.domain;
     const active = d === 'all'
       ? filterDomains.size === DOMAINS.length
@@ -253,6 +253,24 @@ function updateFilterButtons() {
     btn.classList.toggle('active', active);
     btn.setAttribute('aria-pressed', active);
   });
+}
+
+function resetFilters() {
+  filterDomains = new Set(DOMAINS);
+  activeScope = 'incomplete';
+  activeView = 'list';
+  updateFilterButtons();
+  document.querySelectorAll('.completion-filter .filter-btn').forEach(b => {
+    const on = b.dataset.scope === activeScope;
+    b.classList.toggle('active', on);
+    b.setAttribute('aria-pressed', on);
+  });
+  document.querySelectorAll('.view-btn').forEach(b => {
+    const on = b.dataset.view === activeView;
+    b.classList.toggle('active', on);
+    b.setAttribute('aria-pressed', on);
+  });
+  renderAll();
 }
 
 // ── Task dialog ───────────────────────────────────────────────────────────────
@@ -385,6 +403,8 @@ function setupDragDrop() {
 // ── Events ────────────────────────────────────────────────────────────────────
 
 function setupEvents() {
+  document.querySelector('.app-title').addEventListener('click', resetFilters);
+
   document.getElementById('add-task-btn').addEventListener('click', () => openTaskDialog());
 
   document.getElementById('settings-btn').addEventListener('click', openSetupDialog);
