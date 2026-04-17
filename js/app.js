@@ -519,12 +519,22 @@ function setupEvents() {
     document.getElementById('setup-dialog').close();
   });
 
-  document.getElementById('disconnect-btn').addEventListener('click', async () => {
+  document.getElementById('disconnect-btn').addEventListener('click', () => {
     document.getElementById('setup-dialog').close();
+    document.getElementById('disconnect-dialog').showModal();
+  });
+
+  document.getElementById('disconnect-confirm-btn').addEventListener('click', async () => {
+    document.getElementById('disconnect-dialog').close();
     localStorage.removeItem(CONFIG_KEY);
     cfg = null;
     sha = null;
     await initApp();
+  });
+
+  document.getElementById('disconnect-cancel-btn').addEventListener('click', () => {
+    document.getElementById('disconnect-dialog').close();
+    openSetupDialog();
   });
 
   document.getElementById('connect-dialog-setup').addEventListener('click', () => {
@@ -555,6 +565,7 @@ async function initApp() {
   document.getElementById('demo-banner').hidden = !demoMode;
 
   if (demoMode) {
+    document.getElementById('status-bar').hidden = true;
     try {
       const res = await fetch('./example.board.json');
       const data = await res.json();

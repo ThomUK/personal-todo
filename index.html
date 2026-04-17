@@ -48,6 +48,19 @@
     </form>
   </dialog>
 
+  <!-- ── Disconnect confirmation dialog ── -->
+  <dialog id="disconnect-dialog" aria-labelledby="disconnect-title" aria-modal="true">
+    <h2 id="disconnect-title">Disconnect data repo?</h2>
+    <p class="setup-hint">
+      This will remove your token and repository settings from this browser.
+      Your data in <strong>personal-todo-data</strong> will not be affected.
+    </p>
+    <div class="form-actions">
+      <button id="disconnect-cancel-btn" class="btn btn-secondary">Cancel</button>
+      <button id="disconnect-confirm-btn" class="btn btn-danger">Disconnect</button>
+    </div>
+  </dialog>
+
   <!-- ── Connect prompt dialog ── -->
   <dialog id="connect-dialog" aria-labelledby="connect-title" aria-modal="true">
     <h2 id="connect-title">Connect your data repo</h2>
