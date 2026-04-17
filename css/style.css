@@ -313,6 +313,32 @@ textarea { resize: vertical; min-height: 80px; }
 
 #main-content { padding: 1.25rem; }
 
+/* ── Loading screen ────────────────────────────────────────────────────────── */
+
+#loading-screen[hidden] { display: none; }
+
+#loading-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5rem 1rem;
+  gap: 1rem;
+  color: var(--text-muted);
+  font-size: 0.9375rem;
+}
+
+.loading-spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 3px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
 /* ── Kanban ────────────────────────────────────────────────────────────────── */
 
 .kanban-board {

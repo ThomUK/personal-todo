@@ -559,13 +559,16 @@ function setupEvents() {
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 
+function showLoadingScreen(visible) {
+  document.getElementById('loading-screen').hidden = !visible;
+}
+
 async function initApp() {
-  document.getElementById('app').hidden = false;
   demoMode = !cfg;
   document.getElementById('demo-banner').hidden = !demoMode;
+  document.getElementById('status-bar').hidden = true;
 
   if (demoMode) {
-    document.getElementById('status-bar').hidden = true;
     try {
       const res = await fetch('./example.board.json');
       const data = await res.json();
@@ -577,14 +580,17 @@ async function initApp() {
     return;
   }
 
-  showStatus('Loading…');
+  const loadingTimer = setTimeout(() => showLoadingScreen(true), 500);
   try {
     const result = await loadBoard(cfg.token, cfg.owner, cfg.repo, cfg.branch, DATA_PATH);
     tasks = result.data.tasks || [];
     sha = result.sha;
-    document.getElementById('status-bar').hidden = true;
+    clearTimeout(loadingTimer);
+    showLoadingScreen(false);
     renderAll();
   } catch (err) {
+    clearTimeout(loadingTimer);
+    showLoadingScreen(false);
     showStatus(`Failed to load: ${err.message}`, 'error');
   }
 }

@@ -6,6 +6,7 @@
   <meta name="description" content="Personal kanban board backed by GitHub">
   <meta name="theme-color" content="#4f46e5">
   <title>Tom's ToDo</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -118,7 +119,7 @@
   </dialog>
 
   <!-- ── App shell ── -->
-  <div id="app" hidden>
+  <div id="app">
 
     <header class="app-header">
       <div class="header-top">
@@ -167,8 +168,13 @@
 
     <main id="main-content">
 
+      <div id="loading-screen" hidden>
+        <div class="loading-spinner"></div>
+        <p>Loading your tasks…</p>
+      </div>
+
       <!-- Board view -->
-      <div id="kanban-view" class="view">
+      <div id="kanban-view" class="view" hidden>
         <div class="kanban-board">
 
           <section class="kanban-column" data-status="todo" aria-label="To Do">
