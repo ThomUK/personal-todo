@@ -519,6 +519,14 @@ function setupEvents() {
     document.getElementById('setup-dialog').close();
   });
 
+  document.getElementById('disconnect-btn').addEventListener('click', async () => {
+    document.getElementById('setup-dialog').close();
+    localStorage.removeItem(CONFIG_KEY);
+    cfg = null;
+    sha = null;
+    await initApp();
+  });
+
   document.getElementById('connect-dialog-setup').addEventListener('click', () => {
     document.getElementById('connect-dialog').close();
     openSetupDialog();
