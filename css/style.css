@@ -206,7 +206,8 @@ textarea { resize: vertical; min-height: 80px; }
 /* ── Filter / view pills ───────────────────────────────────────────────────── */
 
 .domain-filter,
-.view-switcher {
+.view-switcher,
+.completion-filter {
   display: flex;
   gap: 0.25rem;
   background: var(--bg);
@@ -266,6 +267,14 @@ textarea { resize: vertical; min-height: 80px; }
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
   align-items: start;
+}
+
+.kanban-board.hide-done {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.kanban-board.hide-done .kanban-column[data-status="done"] {
+  display: none;
 }
 
 @media (max-width: 700px) {
@@ -556,7 +565,7 @@ textarea { resize: vertical; min-height: 80px; }
 
 @media (max-width: 480px) {
   .header-controls { gap: 0.5rem; }
-  .domain-filter, .view-switcher { flex-wrap: wrap; }
+  .domain-filter, .view-switcher, .completion-filter { flex-wrap: wrap; }
   .filter-btn, .view-btn { padding: 0.3rem 0.625rem; font-size: 0.75rem; }
   .task-table th:nth-child(3),
   .task-table td:nth-child(3) { display: none; }

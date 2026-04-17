@@ -165,6 +165,7 @@ function completionFiltered() {
 
 function renderKanban() {
   const ft = completionFiltered();
+  document.querySelector('.kanban-board').classList.toggle('hide-done', !showCompleted);
   document.querySelectorAll('.kanban-column').forEach(col => {
     const status = col.dataset.status;
     const colTasks = ft.filter(t => t.status === status);
