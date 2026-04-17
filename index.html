@@ -14,9 +14,10 @@
   <dialog id="setup-dialog" aria-labelledby="setup-title" aria-modal="true">
     <h2 id="setup-title">Data Repository</h2>
     <p class="setup-hint">
-      This app stores your tasks as <code>board.json</code> in a separate
-      GitHub repository. Create a dedicated repo for your data (it can be
-      private), then generate a <strong>Personal Access Token</strong> with
+      Your tasks are stored as <code>board.json</code> in a separate
+      <strong>personal-todo-data</strong> GitHub repository — the app itself
+      requires no API access. Create that repo (it can be private), then
+      generate a <strong>Personal Access Token</strong> scoped to it with
       <code>repo</code> scope (or <code>contents: write</code> for fine-grained
       tokens). Your token is stored only in this browser's localStorage.
     </p>
