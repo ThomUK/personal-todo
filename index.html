@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Personal kanban board backed by GitHub">
+  <meta name="theme-color" content="#4f46e5">
+  <title>Kanban</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ── Setup / Settings dialog ── -->
+  <dialog id="setup-dialog" aria-labelledby="setup-title" aria-modal="true">
+    <h2 id="setup-title">Connect to GitHub</h2>
+    <p class="setup-hint">
+      Create a <strong>Personal Access Token</strong> with <code>repo</code> (or
+      <code>contents: write</code> for fine-grained tokens) scope, then fill in
+      the details below. Your token is stored only in this browser's localStorage.
+    </p>
+    <form id="setup-form" autocomplete="off">
+      <label>
+        Personal Access Token
+        <input type="password" name="token" required placeholder="ghp_…" autocomplete="new-password">
+      </label>
+      <div class="form-row">
+        <label>
+          Owner
+          <input type="text" name="owner" required placeholder="your-username">
+        </label>
+        <label>
+          Repository
+          <input type="text" name="repo" required placeholder="personal-todo">
+        </label>
+      </div>
+      <label>
+        Branch (data is read/written here)
+        <input type="text" name="branch" value="main" required placeholder="main">
+      </label>
+      <div class="form-actions">
+        <button type="button" id="cancel-setup-btn" class="btn btn-secondary">Cancel</button>
+        <button type="submit" class="btn btn-primary">Connect</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- ── Add / Edit task dialog ── -->
+  <dialog id="task-dialog" aria-labelledby="task-dialog-title" aria-modal="true">
+    <h2 id="task-dialog-title">Add Task</h2>
+    <form id="task-form" autocomplete="off">
+      <label>
+        Title
+        <input type="text" name="title" required placeholder="What needs doing?">
+      </label>
+      <label>
+        Description <span style="font-weight:400;color:var(--text-muted)">(optional)</span>
+        <textarea name="description" placeholder="Notes, links, context…"></textarea>
+      </label>
+      <div class="form-row">
+        <label>
+          Domain
+          <select name="domain">
+            <option value="home">🏠 Home</option>
+            <option value="work">💼 Work</option>
+            <option value="apps">💻 Apps</option>
+          </select>
+        </label>
+        <label>
+          Status
+          <select name="status">
+            <option value="todo">To Do</option>
+            <option value="in-progress">In Progress</option>
+            <option value="done">Done</option>
+          </select>
+        </label>
+      </div>
+      <label>
+        Due Date <span style="font-weight:400;color:var(--text-muted)">(optional)</span>
+        <input type="date" name="dueDate">
+      </label>
+      <div class="form-actions">
+        <button type="button" id="delete-task-btn" class="btn btn-danger" hidden>Delete</button>
+        <button type="button" id="cancel-task-btn" class="btn btn-secondary">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- ── App shell ── -->
+  <div id="app" hidden>
+
+    <header class="app-header">
+      <div class="header-top">
+        <h1 class="app-title">Kanban</h1>
+        <div class="header-actions">
+          <button id="add-task-btn" class="btn btn-primary">+ Add Task</button>
+          <button id="settings-btn" class="btn btn-ghost" aria-label="Settings">⚙</button>
+        </div>
+      </div>
+      <div class="header-controls">
+        <div class="domain-filter" role="group" aria-label="Filter by domain">
+          <button class="filter-btn active" data-domain="all" aria-pressed="true">All</button>
+          <button class="filter-btn" data-domain="home" aria-pressed="false">🏠 Home</button>
+          <button class="filter-btn" data-domain="work" aria-pressed="false">💼 Work</button>
+          <button class="filter-btn" data-domain="apps" aria-pressed="false">💻 Apps</button>
+        </div>
+        <div class="view-switcher" role="group" aria-label="View">
+          <button class="view-btn active" data-view="kanban" aria-pressed="true">Board</button>
+          <button class="view-btn" data-view="list" aria-pressed="false">List</button>
+          <button class="view-btn" data-view="upcoming" aria-pressed="false">Upcoming</button>
+        </div>
+      </div>
+    </header>
+
+    <div id="status-bar" role="status" aria-live="polite" hidden>
+      <span id="status-message"></span>
+    </div>
+
+    <main id="main-content">
+
+      <!-- Board view -->
+      <div id="kanban-view" class="view">
+        <div class="kanban-board">
+
+          <section class="kanban-column" data-status="todo" aria-label="To Do">
+            <div class="column-header">
+              <div class="column-header-left">
+                <h2>To Do</h2>
+                <span class="column-count" aria-live="polite">0</span>
+              </div>
+              <button class="btn-icon column-add-btn" title="Add task to To Do">+ Add</button>
+            </div>
+            <div class="column-cards" role="list"></div>
+          </section>
+
+          <section class="kanban-column" data-status="in-progress" aria-label="In Progress">
+            <div class="column-header">
+              <div class="column-header-left">
+                <h2>In Progress</h2>
+                <span class="column-count" aria-live="polite">0</span>
+              </div>
+              <button class="btn-icon column-add-btn" title="Add task to In Progress">+ Add</button>
+            </div>
+            <div class="column-cards" role="list"></div>
+          </section>
+
+          <section class="kanban-column" data-status="done" aria-label="Done">
+            <div class="column-header">
+              <div class="column-header-left">
+                <h2>Done</h2>
+                <span class="column-count" aria-live="polite">0</span>
+              </div>
+              <button class="btn-icon column-add-btn" title="Add task to Done">+ Add</button>
+            </div>
+            <div class="column-cards" role="list"></div>
+          </section>
+
+        </div>
+      </div>
+
+      <!-- List view -->
+      <div id="list-view" class="view" hidden>
+        <table class="task-table" aria-label="All tasks">
+          <thead>
+            <tr>
+              <th scope="col">Title</th>
+              <th scope="col">Domain</th>
+              <th scope="col">Status</th>
+              <th scope="col">Due Date</th>
+            </tr>
+          </thead>
+          <tbody id="list-tbody"></tbody>
+        </table>
+      </div>
+
+      <!-- Upcoming view -->
+      <div id="upcoming-view" class="view" hidden aria-label="Upcoming tasks">
+        <div id="upcoming-list"></div>
+      </div>
+
+    </main>
+  </div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
