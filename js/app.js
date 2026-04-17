@@ -12,7 +12,7 @@ let sha = null;
 let saving = false;
 let filterDomains = new Set(DOMAINS);
 let activeView = 'kanban';
-let showCompleted = false;
+let showCompleted = true;
 let editingId = null;
 let draggedId = null;
 
@@ -139,8 +139,13 @@ function cardHTML(task) {
 
 // ── Kanban ────────────────────────────────────────────────────────────────────
 
-function renderKanban() {
+function completionFiltered() {
   const ft = filteredTasks();
+  return showCompleted ? ft : ft.filter(t => t.status !== 'done');
+}
+
+function renderKanban() {
+  const ft = completionFiltered();
   document.querySelectorAll('.kanban-column').forEach(col => {
     const status = col.dataset.status;
     const colTasks = ft.filter(t => t.status === status);
@@ -152,7 +157,7 @@ function renderKanban() {
 // ── List ──────────────────────────────────────────────────────────────────────
 
 function renderList() {
-  const ft = filteredTasks().filter(t => showCompleted || t.status !== 'done');
+  const ft = completionFiltered();
   const tbody = document.getElementById('list-tbody');
   if (!ft.length) {
     tbody.innerHTML = '<tr><td colspan="4" class="empty-cell">No tasks</td></tr>';
@@ -474,9 +479,15 @@ function setupEvents() {
     await initApp();
   });
 
-  document.getElementById('show-completed-toggle').addEventListener('change', e => {
-    showCompleted = e.target.checked;
-    renderList();
+  document.querySelector('.completion-filter').addEventListener('click', e => {
+    const btn = e.target.closest('.filter-btn');
+    if (!btn) return;
+    showCompleted = btn.dataset.completion === 'all';
+    document.querySelectorAll('.completion-filter .filter-btn').forEach(b => {
+      b.classList.toggle('active', b === btn);
+      b.setAttribute('aria-pressed', b === btn);
+    });
+    renderAll();
   });
 
   document.getElementById('cancel-setup-btn')?.addEventListener('click', () => {

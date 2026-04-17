@@ -109,6 +109,10 @@
           <button class="view-btn" data-view="list" aria-pressed="false">List</button>
           <button class="view-btn" data-view="upcoming" aria-pressed="false">Upcoming</button>
         </div>
+        <div class="completion-filter" role="group" aria-label="Filter by completion">
+          <button class="filter-btn active" data-completion="all" aria-pressed="true">Show all</button>
+          <button class="filter-btn" data-completion="incomplete" aria-pressed="false">Incomplete</button>
+        </div>
       </div>
     </header>
 
@@ -160,12 +164,6 @@
 
       <!-- List view -->
       <div id="list-view" class="view" hidden>
-        <div class="list-toolbar">
-          <label class="toggle-label">
-            <input type="checkbox" id="show-completed-toggle">
-            Show completed
-          </label>
-        </div>
         <table class="task-table" aria-label="All tasks">
           <thead>
             <tr>
