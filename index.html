@@ -98,20 +98,29 @@
         </div>
       </div>
       <div class="header-controls">
-        <div class="domain-filter" role="group" aria-label="Filter by domain">
-          <button class="filter-btn active" data-domain="all" aria-pressed="true">All</button>
-          <button class="filter-btn" data-domain="home" aria-pressed="false">🏠 Home</button>
-          <button class="filter-btn" data-domain="work" aria-pressed="false">💼 Work</button>
-          <button class="filter-btn" data-domain="apps" aria-pressed="false">💻 Apps</button>
+        <div class="filter-group">
+          <span class="filter-group-label">Domain</span>
+          <div class="domain-filter" role="group" aria-label="Filter by domain">
+            <button class="filter-btn active" data-domain="all" aria-pressed="true">All</button>
+            <button class="filter-btn" data-domain="home" aria-pressed="false">🏠 Home</button>
+            <button class="filter-btn" data-domain="work" aria-pressed="false">💼 Work</button>
+            <button class="filter-btn" data-domain="apps" aria-pressed="false">💻 Apps</button>
+          </div>
         </div>
-        <div class="view-switcher" role="group" aria-label="View">
-          <button class="view-btn active" data-view="kanban" aria-pressed="true">Board</button>
-          <button class="view-btn" data-view="list" aria-pressed="false">List</button>
+        <div class="filter-group">
+          <span class="filter-group-label">View</span>
+          <div class="view-switcher" role="group" aria-label="View">
+            <button class="view-btn" data-view="list" aria-pressed="false">List</button>
+            <button class="view-btn active" data-view="kanban" aria-pressed="true">Board</button>
+          </div>
         </div>
-        <div class="completion-filter" role="group" aria-label="Scope">
-          <button class="filter-btn active" data-scope="all" aria-pressed="true">Show all</button>
-          <button class="filter-btn" data-scope="upcoming" aria-pressed="false">Due dated</button>
-          <button class="filter-btn" data-scope="incomplete" aria-pressed="false">Incomplete</button>
+        <div class="filter-group">
+          <span class="filter-group-label">Timings</span>
+          <div class="completion-filter" role="group" aria-label="Timings">
+            <button class="filter-btn active" data-scope="all" aria-pressed="true">Show all</button>
+            <button class="filter-btn" data-scope="upcoming" aria-pressed="false">Due dated</button>
+            <button class="filter-btn" data-scope="incomplete" aria-pressed="false">Incomplete</button>
+          </div>
         </div>
       </div>
     </header>
