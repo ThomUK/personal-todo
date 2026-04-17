@@ -10,6 +10,7 @@ let cfg = null;
 let tasks = [];
 let sha = null;
 let saving = false;
+let demoMode = false;
 let filterDomains = new Set(DOMAINS);
 let activeView = 'list';
 let activeScope = 'incomplete'; // 'all' | 'upcoming' | 'incomplete'
@@ -322,9 +323,18 @@ function openSetupDialog() {
   dialog.showModal();
 }
 
+// ── Demo mode ─────────────────────────────────────────────────────────────────
+
+function requireDataRepo() {
+  if (!demoMode) return true;
+  document.getElementById('connect-dialog').showModal();
+  return false;
+}
+
 // ── CRUD ──────────────────────────────────────────────────────────────────────
 
 async function saveTask(data) {
+  if (!requireDataRepo()) return;
   const now = new Date().toISOString();
   if (editingId) {
     const idx = tasks.findIndex(t => t.id === editingId);
@@ -340,6 +350,7 @@ async function saveTask(data) {
 }
 
 async function deleteTask(id) {
+  if (!requireDataRepo()) return;
   const task = tasks.find(t => t.id === id);
   if (!task) return;
   if (!confirm(`Delete "${task.title}"?`)) return;
@@ -350,6 +361,7 @@ async function deleteTask(id) {
 }
 
 async function moveTask(id, newStatus) {
+  if (!requireDataRepo()) return;
   const task = tasks.find(t => t.id === id);
   if (!task || task.status === newStatus) return;
   const prev = task.status;
@@ -408,6 +420,7 @@ function setupEvents() {
   document.getElementById('add-task-btn').addEventListener('click', () => openTaskDialog());
 
   document.getElementById('settings-btn').addEventListener('click', openSetupDialog);
+  document.getElementById('demo-connect-btn').addEventListener('click', openSetupDialog);
 
   document.querySelector('.domain-filter').addEventListener('click', e => {
     const btn = e.target.closest('.filter-btn');
@@ -506,6 +519,15 @@ function setupEvents() {
     document.getElementById('setup-dialog').close();
   });
 
+  document.getElementById('connect-dialog-setup').addEventListener('click', () => {
+    document.getElementById('connect-dialog').close();
+    openSetupDialog();
+  });
+
+  document.getElementById('connect-dialog-close').addEventListener('click', () => {
+    document.getElementById('connect-dialog').close();
+  });
+
   // 'n' shortcut to add task
   document.addEventListener('keydown', e => {
     if (e.key !== 'n' || e.ctrlKey || e.metaKey || e.altKey) return;
@@ -521,6 +543,21 @@ function setupEvents() {
 
 async function initApp() {
   document.getElementById('app').hidden = false;
+  demoMode = !cfg;
+  document.getElementById('demo-banner').hidden = !demoMode;
+
+  if (demoMode) {
+    try {
+      const res = await fetch('./example.board.json');
+      const data = await res.json();
+      tasks = data.tasks || [];
+    } catch {
+      tasks = [];
+    }
+    renderAll();
+    return;
+  }
+
   showStatus('Loading…');
   try {
     const result = await loadBoard(cfg.token, cfg.owner, cfg.repo, cfg.branch, DATA_PATH);
@@ -536,11 +573,7 @@ async function initApp() {
 async function main() {
   cfg = loadConfig();
   setupEvents();
-  if (!cfg) {
-    document.getElementById('setup-dialog').showModal();
-  } else {
-    await initApp();
-  }
+  await initApp();
 }
 
 main();

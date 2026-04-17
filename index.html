@@ -47,6 +47,20 @@
     </form>
   </dialog>
 
+  <!-- ── Connect prompt dialog ── -->
+  <dialog id="connect-dialog" aria-labelledby="connect-title" aria-modal="true">
+    <h2 id="connect-title">Connect your data repo</h2>
+    <p class="setup-hint">
+      You're currently viewing example data. To create, edit, and save your
+      own tasks, connect a private <strong>personal-todo-data</strong> GitHub
+      repository. See the README for setup instructions.
+    </p>
+    <div class="form-actions">
+      <button id="connect-dialog-close" class="btn btn-secondary">Close</button>
+      <button id="connect-dialog-setup" class="btn btn-primary">Connect now →</button>
+    </div>
+  </dialog>
+
   <!-- ── Add / Edit task dialog ── -->
   <dialog id="task-dialog" aria-labelledby="task-dialog-title" aria-modal="true">
     <h2 id="task-dialog-title">Add Task</h2>
@@ -127,6 +141,11 @@
         </div>
       </div>
     </header>
+
+    <div id="demo-banner" hidden>
+      <span>You're viewing example data — changes won't be saved.</span>
+      <button id="demo-connect-btn" class="btn-link">Connect your data repo →</button>
+    </div>
 
     <div id="status-bar" role="status" aria-live="polite" hidden>
       <span id="status-message"></span>
