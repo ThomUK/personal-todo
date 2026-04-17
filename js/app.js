@@ -3,7 +3,7 @@ import { loadBoard, saveBoard } from './github.js';
 const DOMAINS = ['home', 'work', 'apps'];
 const DOMAIN_LABELS = { home: 'Home', work: 'Work', apps: 'Apps' };
 const STATUS_LABELS = { todo: 'To Do', 'in-progress': 'In Progress', done: 'Done' };
-const DATA_PATH = 'data/board.json';
+const DATA_PATH = 'board.json';
 const CONFIG_KEY = 'kanban-config';
 
 let cfg = null;

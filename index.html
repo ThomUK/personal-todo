@@ -12,11 +12,13 @@
 
   <!-- ── Setup / Settings dialog ── -->
   <dialog id="setup-dialog" aria-labelledby="setup-title" aria-modal="true">
-    <h2 id="setup-title">Connect to GitHub</h2>
+    <h2 id="setup-title">Data Repository</h2>
     <p class="setup-hint">
-      Create a <strong>Personal Access Token</strong> with <code>repo</code> (or
-      <code>contents: write</code> for fine-grained tokens) scope, then fill in
-      the details below. Your token is stored only in this browser's localStorage.
+      This app stores your tasks as <code>board.json</code> in a separate
+      GitHub repository. Create a dedicated repo for your data (it can be
+      private), then generate a <strong>Personal Access Token</strong> with
+      <code>repo</code> scope (or <code>contents: write</code> for fine-grained
+      tokens). Your token is stored only in this browser's localStorage.
     </p>
     <form id="setup-form" autocomplete="off">
       <label>
@@ -30,11 +32,11 @@
         </label>
         <label>
           Repository
-          <input type="text" name="repo" required placeholder="personal-todo">
+          <input type="text" name="repo" required placeholder="todo-data">
         </label>
       </div>
       <label>
-        Branch (data is read/written here)
+        Branch
         <input type="text" name="branch" value="main" required placeholder="main">
       </label>
       <div class="form-actions">
