@@ -511,63 +511,6 @@ textarea { resize: vertical; min-height: 80px; }
   cursor: default;
 }
 
-/* ── Upcoming view ─────────────────────────────────────────────────────────── */
-
-.upcoming-section { margin-bottom: 1.75rem; }
-
-.upcoming-section h3 {
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .06em;
-  color: var(--text-muted);
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 0.625rem;
-}
-
-.upcoming-section h3.heading-overdue { color: var(--overdue); }
-.upcoming-section h3.heading-muted { color: var(--text-muted); opacity: .7; }
-
-.upcoming-item {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.625rem 0.875rem;
-  background: var(--surface);
-  border-radius: 8px;
-  margin-bottom: 0.375rem;
-  cursor: pointer;
-  border: 1px solid var(--border);
-  transition: box-shadow .15s, transform .1s;
-}
-
-.upcoming-item:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
-
-.upcoming-item.overdue { border-left: 3px solid var(--overdue); }
-.upcoming-item.due-soon { border-left: 3px solid var(--due-soon); }
-.upcoming-item.done-item { opacity: .6; }
-
-.upcoming-date {
-  font-size: 0.8125rem;
-  font-weight: 600;
-  min-width: 6rem;
-  color: var(--text-muted);
-  flex-shrink: 0;
-}
-
-.upcoming-item.overdue .upcoming-date { color: var(--overdue); }
-.upcoming-item.due-soon .upcoming-date { color: var(--due-soon); }
-
-.upcoming-title {
-  flex: 1;
-  font-size: 0.9375rem;
-}
-
-.upcoming-item.done-item .upcoming-title {
-  text-decoration: line-through;
-  color: var(--text-muted);
-}
 
 .empty-state {
   text-align: center;
@@ -584,6 +527,5 @@ textarea { resize: vertical; min-height: 80px; }
   .filter-btn, .view-btn { padding: 0.3rem 0.625rem; font-size: 0.75rem; }
   .task-table th:nth-child(3),
   .task-table td:nth-child(3) { display: none; }
-  .upcoming-date { min-width: 4.5rem; font-size: 0.75rem; }
   dialog { padding: 1.25rem; }
 }

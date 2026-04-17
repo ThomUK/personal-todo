@@ -160,7 +160,9 @@ function playDoneSound() {
 
 function completionFiltered() {
   const ft = filteredTasks();
-  return activeScope === 'incomplete' ? ft.filter(t => t.status !== 'done') : ft;
+  if (activeScope === 'incomplete') return ft.filter(t => t.status !== 'done');
+  if (activeScope === 'upcoming') return ft.filter(t => t.dueDate);
+  return ft;
 }
 
 function renderKanban() {
@@ -208,59 +210,12 @@ function renderList() {
     </tr>`).join('');
 }
 
-// ── Upcoming ──────────────────────────────────────────────────────────────────
-
-function renderUpcoming() {
-  const ft = filteredTasks().filter(t => t.dueDate);
-  const container = document.getElementById('upcoming-list');
-  if (!ft.length) {
-    container.innerHTML = '<div class="empty-state">No tasks with due dates</div>';
-    return;
-  }
-  const sorted = [...ft].sort((a, b) => a.dueDate.localeCompare(b.dueDate));
-  const active = sorted.filter(t => t.status !== 'done');
-  const done = sorted.filter(t => t.status === 'done');
-
-  function itemHTML(t) {
-    const dc = dueDateClass(t);
-    const isDone = t.status === 'done';
-    return `<div class="upcoming-item ${dc} ${isDone ? 'done-item' : ''}"
-      data-id="${t.id}" tabindex="0" role="button" aria-label="${esc(t.title)}">
-      <span class="upcoming-date">${formatDate(t.dueDate)}</span>
-      ${domainBadge(t.domain)}
-      <span class="upcoming-title">${esc(t.title)}</span>
-      ${statusBadge(t.status)}
-    </div>`;
-  }
-
-  function section(heading, items, cls = '') {
-    if (!items.length) return '';
-    return `<div class="upcoming-section">
-      <h3 class="${cls}">${heading}</h3>
-      ${items.map(itemHTML).join('')}
-    </div>`;
-  }
-
-  const overdue = active.filter(t => daysUntil(t.dueDate) < 0);
-  const today = active.filter(t => daysUntil(t.dueDate) === 0);
-  const upcoming = active.filter(t => daysUntil(t.dueDate) > 0);
-
-  container.innerHTML =
-    section('Overdue', overdue, 'heading-overdue') +
-    section('Today', today) +
-    section('Upcoming', upcoming) +
-    (done.length ? section('Completed', done, 'heading-muted') : '');
-}
-
 // ── Render all ────────────────────────────────────────────────────────────────
 
 function renderAll() {
-  const isUpcoming = activeScope === 'upcoming';
-  document.getElementById('upcoming-view').hidden = !isUpcoming;
-  document.getElementById('kanban-view').hidden = isUpcoming || activeView !== 'kanban';
-  document.getElementById('list-view').hidden = isUpcoming || activeView !== 'list';
-  if (isUpcoming) renderUpcoming();
-  else if (activeView === 'kanban') renderKanban();
+  document.getElementById('kanban-view').hidden = activeView !== 'kanban';
+  document.getElementById('list-view').hidden = activeView !== 'list';
+  if (activeView === 'kanban') renderKanban();
   else renderList();
 }
 
@@ -467,7 +422,6 @@ function setupEvents() {
 
   attachTaskOpen('kanban-view', '.task-card');
   attachTaskOpen('list-tbody', 'tr[data-id]');
-  attachTaskOpen('upcoming-list', '.upcoming-item[data-id]');
 
   // Column add-task buttons
   document.getElementById('kanban-view').addEventListener('click', e => {
