@@ -12,7 +12,7 @@ let sha = null;
 let saving = false;
 let filterDomains = new Set(DOMAINS);
 let activeView = 'kanban';
-let showCompleted = true;
+let activeScope = 'all'; // 'all' | 'upcoming' | 'incomplete'
 let editingId = null;
 let draggedId = null;
 
@@ -160,12 +160,12 @@ function playDoneSound() {
 
 function completionFiltered() {
   const ft = filteredTasks();
-  return showCompleted ? ft : ft.filter(t => t.status !== 'done');
+  return activeScope === 'incomplete' ? ft.filter(t => t.status !== 'done') : ft;
 }
 
 function renderKanban() {
   const ft = completionFiltered();
-  document.querySelector('.kanban-board').classList.toggle('hide-done', !showCompleted);
+  document.querySelector('.kanban-board').classList.toggle('hide-done', activeScope === 'incomplete');
   document.querySelectorAll('.kanban-column').forEach(col => {
     const status = col.dataset.status;
     const colTasks = ft.filter(t => t.status === status);
@@ -255,18 +255,19 @@ function renderUpcoming() {
 // ── Render all ────────────────────────────────────────────────────────────────
 
 function renderAll() {
-  if (activeView === 'kanban') renderKanban();
-  else if (activeView === 'list') renderList();
-  else renderUpcoming();
+  const isUpcoming = activeScope === 'upcoming';
+  document.getElementById('upcoming-view').hidden = !isUpcoming;
+  document.getElementById('kanban-view').hidden = isUpcoming || activeView !== 'kanban';
+  document.getElementById('list-view').hidden = isUpcoming || activeView !== 'list';
+  if (isUpcoming) renderUpcoming();
+  else if (activeView === 'kanban') renderKanban();
+  else renderList();
 }
 
 // ── View switching ────────────────────────────────────────────────────────────
 
 function switchView(view) {
   activeView = view;
-  ['kanban', 'list', 'upcoming'].forEach(v => {
-    document.getElementById(`${v}-view`).hidden = v !== view;
-  });
   document.querySelectorAll('.view-btn').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.view === view);
     btn.setAttribute('aria-pressed', btn.dataset.view === view);
@@ -516,7 +517,7 @@ function setupEvents() {
   document.querySelector('.completion-filter').addEventListener('click', e => {
     const btn = e.target.closest('.filter-btn');
     if (!btn) return;
-    showCompleted = btn.dataset.completion === 'all';
+    activeScope = btn.dataset.scope;
     document.querySelectorAll('.completion-filter .filter-btn').forEach(b => {
       b.classList.toggle('active', b === btn);
       b.setAttribute('aria-pressed', b === btn);
