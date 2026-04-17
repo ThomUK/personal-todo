@@ -11,8 +11,8 @@ let tasks = [];
 let sha = null;
 let saving = false;
 let filterDomains = new Set(DOMAINS);
-let activeView = 'kanban';
-let activeScope = 'all'; // 'all' | 'upcoming' | 'incomplete'
+let activeView = 'list';
+let activeScope = 'incomplete'; // 'all' | 'upcoming' | 'incomplete'
 let editingId = null;
 let draggedId = null;
 
