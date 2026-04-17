@@ -52,6 +52,7 @@ dialog {
   width: calc(100% - 2rem);
   max-height: 90dvh;
   overflow-y: auto;
+  margin: auto;
 }
 
 dialog::backdrop { background: rgba(0,0,0,.45); }

@@ -450,7 +450,10 @@ function setupEvents() {
   document.getElementById('cancel-task-btn').addEventListener('click', closeTaskDialog);
 
   document.getElementById('task-dialog').addEventListener('click', e => {
-    if (e.target === e.currentTarget) closeTaskDialog();
+    if (e.target === e.currentTarget) {
+      e.stopPropagation();
+      closeTaskDialog();
+    }
   });
 
   document.getElementById('setup-form').addEventListener('submit', async e => {
