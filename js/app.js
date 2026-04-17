@@ -137,6 +137,25 @@ function cardHTML(task) {
     </article>`;
 }
 
+// ── Sound ─────────────────────────────────────────────────────────────────────
+
+function playDoneSound() {
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  [[523.25, 0], [659.25, 0.07], [783.99, 0.14]].forEach(([freq, delay]) => {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = 'sine';
+    osc.frequency.value = freq;
+    const t = ctx.currentTime + delay;
+    gain.gain.setValueAtTime(0.25, t);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.35);
+    osc.start(t);
+    osc.stop(t + 0.35);
+  });
+}
+
 // ── Kanban ────────────────────────────────────────────────────────────────────
 
 function completionFiltered() {
@@ -160,7 +179,7 @@ function renderList() {
   const ft = completionFiltered();
   const tbody = document.getElementById('list-tbody');
   if (!ft.length) {
-    tbody.innerHTML = '<tr><td colspan="4" class="empty-cell">No tasks</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="5" class="empty-cell">No tasks</td></tr>';
     return;
   }
   const order = { todo: 0, 'in-progress': 1, done: 2 };
@@ -172,6 +191,12 @@ function renderList() {
   });
   tbody.innerHTML = sorted.map(t => `
     <tr data-id="${t.id}" tabindex="0">
+      <td class="complete-cell">
+        <button class="complete-btn ${t.status === 'done' ? 'is-done' : ''}"
+          data-id="${t.id}" aria-label="Mark complete" tabindex="0">
+          ${t.status === 'done' ? '✓' : ''}
+        </button>
+      </td>
       <td class="${t.status === 'done' ? 'done-title' : ''}">${esc(t.title)}</td>
       <td>${domainBadge(t.domain)}</td>
       <td>${statusBadge(t.status)}</td>
@@ -430,6 +455,14 @@ function setupEvents() {
       if (target?.dataset.id) { e.preventDefault(); openTaskDialog(target.dataset.id); }
     });
   }
+  document.getElementById('list-tbody').addEventListener('click', e => {
+    const btn = e.target.closest('.complete-btn');
+    if (!btn || btn.classList.contains('is-done')) return;
+    e.stopPropagation();
+    playDoneSound();
+    moveTask(btn.dataset.id, 'done');
+  });
+
   attachTaskOpen('kanban-view', '.task-card');
   attachTaskOpen('list-tbody', 'tr[data-id]');
   attachTaskOpen('upcoming-list', '.upcoming-item[data-id]');

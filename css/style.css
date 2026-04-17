@@ -455,6 +455,38 @@ textarea { resize: vertical; min-height: 80px; }
 .empty-cell { text-align: center; padding: 3rem 1rem; color: var(--text-muted); font-size: 0.9375rem; }
 .muted { color: var(--text-muted); }
 
+.complete-cell { width: 2.5rem; padding-right: 0; }
+
+.complete-btn {
+  width: 1.375rem;
+  height: 1.375rem;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: transparent;
+  transition: border-color .15s, background .15s, color .15s, transform .1s;
+  flex-shrink: 0;
+}
+
+.complete-btn:hover:not(.is-done) {
+  border-color: var(--home);
+  background: var(--home-bg);
+  transform: scale(1.12);
+}
+
+.complete-btn.is-done {
+  border-color: var(--home);
+  background: var(--home);
+  color: #fff;
+  cursor: default;
+}
+
 /* ── Upcoming view ─────────────────────────────────────────────────────────── */
 
 .upcoming-section { margin-bottom: 1.75rem; }
