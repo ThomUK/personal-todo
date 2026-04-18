@@ -333,11 +333,11 @@ function requireDataRepo() {
 
 // ── CRUD ──────────────────────────────────────────────────────────────────────
 
-async function saveTask(data) {
+async function saveTask(data, id = null) {
   if (!requireDataRepo()) return;
   const now = new Date().toISOString();
-  if (editingId) {
-    const idx = tasks.findIndex(t => t.id === editingId);
+  if (id) {
+    const idx = tasks.findIndex(t => t.id === id);
     if (idx === -1) return;
     tasks[idx] = { ...tasks[idx], ...data, updatedAt: now };
     await persist(`Update: ${tasks[idx].title}`);
@@ -472,8 +472,9 @@ function setupEvents() {
       status: fd.get('status'),
       dueDate: fd.get('dueDate') || null,
     };
+    const idToEdit = editingId;
     closeTaskDialog();
-    await saveTask(data);
+    await saveTask(data, idToEdit);
   });
 
   document.getElementById('delete-task-btn').addEventListener('click', () => {
