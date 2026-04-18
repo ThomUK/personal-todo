@@ -10,6 +10,7 @@ let cfg = null;
 let tasks = [];
 let sha = null;
 let saving = false;
+let saveQueued = null;
 let demoMode = false;
 let filterDomains = new Set(DOMAINS);
 let activeView = 'list';
@@ -98,8 +99,11 @@ function showStatus(msg, type = '') {
 
 // ── Persist ───────────────────────────────────────────────────────────────────
 
-async function persist(message) {
-  if (saving) return;
+async function persist(message, applyChange = null) {
+  if (saving) {
+    saveQueued = { message, applyChange };
+    return;
+  }
   saving = true;
   showStatus('Saving…');
   try {
@@ -108,10 +112,13 @@ async function persist(message) {
     showStatus('Saved', 'success');
   } catch (err) {
     if (err.message && err.message.includes('does not match')) {
-      // SHA is stale — fetch the current one and retry once
       try {
         const current = await loadBoard(cfg.token, cfg.owner, cfg.repo, cfg.branch, DATA_PATH);
         sha = current.sha;
+        if (applyChange) {
+          tasks = applyChange(current.data.tasks || []);
+          renderAll();
+        }
         sha = await saveBoard(cfg.token, cfg.owner, cfg.repo, cfg.branch, DATA_PATH,
           { version: 1, tasks }, sha, message);
         showStatus('Saved', 'success');
@@ -123,6 +130,11 @@ async function persist(message) {
     }
   } finally {
     saving = false;
+    if (saveQueued) {
+      const q = saveQueued;
+      saveQueued = null;
+      await persist(q.message, q.applyChange);
+    }
   }
 }
 
@@ -353,11 +365,16 @@ async function saveTask(data, id = null) {
     const idx = tasks.findIndex(t => t.id === id);
     if (idx === -1) return;
     tasks[idx] = { ...tasks[idx], ...data, updatedAt: now };
-    await persist(`Update: ${tasks[idx].title}`);
+    const updated = tasks[idx];
+    await persist(`Update: ${updated.title}`,
+      remoteTasks => remoteTasks.map(t => t.id === updated.id ? updated : t));
   } else {
     const task = { id: uid(), ...data, createdAt: now, updatedAt: now };
     tasks.unshift(task);
-    await persist(`Add: ${task.title}`);
+    await persist(`Add: ${task.title}`,
+      remoteTasks => remoteTasks.find(t => t.id === task.id)
+        ? remoteTasks
+        : [task, ...remoteTasks]);
   }
   renderAll();
 }
@@ -370,7 +387,8 @@ async function deleteTask(id) {
   tasks = tasks.filter(t => t.id !== id);
   closeTaskDialog();
   renderAll();
-  await persist(`Delete: ${task.title}`);
+  await persist(`Delete: ${task.title}`,
+    remoteTasks => remoteTasks.filter(t => t.id !== id));
 }
 
 async function moveTask(id, newStatus) {
@@ -378,10 +396,12 @@ async function moveTask(id, newStatus) {
   const task = tasks.find(t => t.id === id);
   if (!task || task.status === newStatus) return;
   const prev = task.status;
+  const now = new Date().toISOString();
   task.status = newStatus;
-  task.updatedAt = new Date().toISOString();
+  task.updatedAt = now;
   renderAll();
-  await persist(`Move: ${task.title} (${STATUS_LABELS[prev]} → ${STATUS_LABELS[newStatus]})`);
+  await persist(`Move: ${task.title} (${STATUS_LABELS[prev]} → ${STATUS_LABELS[newStatus]})`,
+    remoteTasks => remoteTasks.map(t => t.id === id ? { ...t, status: newStatus, updatedAt: now } : t));
 }
 
 // ── Drag and drop ─────────────────────────────────────────────────────────────
@@ -460,14 +480,26 @@ function setupEvents() {
   }
   document.getElementById('list-tbody').addEventListener('click', e => {
     const btn = e.target.closest('.complete-btn');
-    if (!btn || btn.classList.contains('is-done')) return;
-    e.stopPropagation();
+    if (!btn) return;
+    if (btn.classList.contains('is-done')) return;
     playDoneSound();
     moveTask(btn.dataset.id, 'done');
   });
 
   attachTaskOpen('kanban-view', '.task-card');
-  attachTaskOpen('list-tbody', 'tr[data-id]');
+
+  // List row click — skip if it was a complete-btn click
+  document.getElementById('list-tbody').addEventListener('click', e => {
+    if (e.target.closest('.complete-btn')) return;
+    const target = e.target.closest('tr[data-id]');
+    if (target?.dataset.id) openTaskDialog(target.dataset.id);
+  });
+  document.getElementById('list-tbody').addEventListener('keydown', e => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    if (e.target.closest('.complete-btn')) return;
+    const target = e.target.closest('tr[data-id]');
+    if (target?.dataset.id) { e.preventDefault(); openTaskDialog(target.dataset.id); }
+  });
 
   // Column add-task buttons
   document.getElementById('kanban-view').addEventListener('click', e => {
