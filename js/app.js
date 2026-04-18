@@ -107,7 +107,20 @@ async function persist(message) {
       { version: 1, tasks }, sha, message);
     showStatus('Saved', 'success');
   } catch (err) {
-    showStatus(`Save failed: ${err.message}`, 'error');
+    if (err.message && err.message.includes('does not match')) {
+      // SHA is stale — fetch the current one and retry once
+      try {
+        const current = await loadBoard(cfg.token, cfg.owner, cfg.repo, cfg.branch, DATA_PATH);
+        sha = current.sha;
+        sha = await saveBoard(cfg.token, cfg.owner, cfg.repo, cfg.branch, DATA_PATH,
+          { version: 1, tasks }, sha, message);
+        showStatus('Saved', 'success');
+      } catch (retryErr) {
+        showStatus(`Save failed: ${retryErr.message}`, 'error');
+      }
+    } else {
+      showStatus(`Save failed: ${err.message}`, 'error');
+    }
   } finally {
     saving = false;
   }
