@@ -170,6 +170,14 @@ textarea { resize: vertical; min-height: 80px; }
 }
 .btn-icon:hover { background: var(--border); color: var(--text); }
 
+/* ── Sticky top wrapper (header + status bar) ──────────────────────────────── */
+
+.sticky-top {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
 /* ── App header ────────────────────────────────────────────────────────────── */
 
 .app-header {
