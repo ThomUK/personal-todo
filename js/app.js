@@ -184,6 +184,15 @@ function playDoneSound() {
 
 // ── Kanban ────────────────────────────────────────────────────────────────────
 
+function sortTasks(list) {
+  return [...list].sort((a, b) => {
+    if (a.dueDate && b.dueDate) return a.dueDate.localeCompare(b.dueDate);
+    if (a.dueDate) return -1;
+    if (b.dueDate) return 1;
+    return (a.createdAt || '').localeCompare(b.createdAt || '');
+  });
+}
+
 function completionFiltered() {
   const ft = filteredTasks();
   if (activeScope === 'incomplete') return ft.filter(t => t.status !== 'done');
@@ -196,7 +205,7 @@ function renderKanban() {
   document.querySelector('.kanban-board').classList.toggle('hide-done', activeScope === 'incomplete');
   document.querySelectorAll('.kanban-column').forEach(col => {
     const status = col.dataset.status;
-    const colTasks = ft.filter(t => t.status === status);
+    const colTasks = sortTasks(ft.filter(t => t.status === status));
     col.querySelector('.column-count').textContent = colTasks.length;
     col.querySelector('.column-cards').innerHTML = colTasks.map(cardHTML).join('');
   });
@@ -211,13 +220,7 @@ function renderList() {
     tbody.innerHTML = '<tr><td colspan="5" class="empty-cell">No tasks</td></tr>';
     return;
   }
-  const order = { todo: 0, 'in-progress': 1, done: 2 };
-  const sorted = [...ft].sort((a, b) => {
-    const sd = order[a.status] - order[b.status];
-    if (sd !== 0) return sd;
-    if (a.dueDate && b.dueDate) return a.dueDate.localeCompare(b.dueDate);
-    return a.dueDate ? -1 : b.dueDate ? 1 : 0;
-  });
+  const sorted = sortTasks(ft);
   tbody.innerHTML = sorted.map(t => `
     <tr data-id="${t.id}" tabindex="0">
       <td class="complete-cell">
