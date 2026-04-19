@@ -257,7 +257,7 @@ function renderAll() {
 
 function switchView(view) {
   activeView = view;
-  document.querySelectorAll('.view-btn').forEach(btn => {
+  document.querySelectorAll('.view-switcher .pill-btn').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.view === view);
     btn.setAttribute('aria-pressed', btn.dataset.view === view);
   });
@@ -279,7 +279,7 @@ function setDomainFilter(domain) {
 }
 
 function updateFilterButtons() {
-  document.querySelectorAll('.domain-filter .filter-btn').forEach(btn => {
+  document.querySelectorAll('.domain-filter .pill-btn').forEach(btn => {
     const d = btn.dataset.domain;
     const active = d === 'all'
       ? filterDomains.size === DOMAINS.length
@@ -295,17 +295,17 @@ function resetFilters() {
   activeView = 'list';
   activeSortDir = 'asc';
   updateFilterButtons();
-  document.querySelectorAll('.completion-filter .filter-btn').forEach(b => {
+  document.querySelectorAll('.completion-filter .pill-btn').forEach(b => {
     const on = b.dataset.scope === activeScope;
     b.classList.toggle('active', on);
     b.setAttribute('aria-pressed', on);
   });
-  document.querySelectorAll('.view-btn').forEach(b => {
+  document.querySelectorAll('.view-switcher .pill-btn').forEach(b => {
     const on = b.dataset.view === activeView;
     b.classList.toggle('active', on);
     b.setAttribute('aria-pressed', on);
   });
-  document.querySelectorAll('.sort-filter .filter-btn').forEach(b => {
+  document.querySelectorAll('.sort-filter .pill-btn').forEach(b => {
     const on = b.dataset.sort === activeSortDir;
     b.classList.toggle('active', on);
     b.setAttribute('aria-pressed', on);
@@ -470,12 +470,12 @@ function setupEvents() {
   document.getElementById('demo-connect-btn').addEventListener('click', openSetupDialog);
 
   document.querySelector('.domain-filter').addEventListener('click', e => {
-    const btn = e.target.closest('.filter-btn');
+    const btn = e.target.closest('.pill-btn');
     if (btn) setDomainFilter(btn.dataset.domain);
   });
 
   document.querySelector('.view-switcher').addEventListener('click', e => {
-    const btn = e.target.closest('.view-btn');
+    const btn = e.target.closest('.pill-btn');
     if (btn) switchView(btn.dataset.view);
   });
 
@@ -565,10 +565,10 @@ function setupEvents() {
   });
 
   document.querySelector('.completion-filter').addEventListener('click', e => {
-    const btn = e.target.closest('.filter-btn');
+    const btn = e.target.closest('.pill-btn');
     if (!btn) return;
     activeScope = btn.dataset.scope;
-    document.querySelectorAll('.completion-filter .filter-btn').forEach(b => {
+    document.querySelectorAll('.completion-filter .pill-btn').forEach(b => {
       b.classList.toggle('active', b === btn);
       b.setAttribute('aria-pressed', b === btn);
     });
@@ -576,10 +576,10 @@ function setupEvents() {
   });
 
   document.querySelector('.sort-filter').addEventListener('click', e => {
-    const btn = e.target.closest('.filter-btn');
+    const btn = e.target.closest('.pill-btn');
     if (!btn) return;
     activeSortDir = btn.dataset.sort;
-    document.querySelectorAll('.sort-filter .filter-btn').forEach(b => {
+    document.querySelectorAll('.sort-filter .pill-btn').forEach(b => {
       b.classList.toggle('active', b === btn);
       b.setAttribute('aria-pressed', b === btn);
     });

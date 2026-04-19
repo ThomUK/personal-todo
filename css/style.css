@@ -233,9 +233,7 @@ textarea { resize: vertical; min-height: 80px; }
 
 /* ── Filter / view pills ───────────────────────────────────────────────────── */
 
-.domain-filter,
-.view-switcher,
-.completion-filter {
+.pill-group {
   display: flex;
   gap: 0.25rem;
   background: var(--bg);
@@ -243,8 +241,7 @@ textarea { resize: vertical; min-height: 80px; }
   border-radius: 20px;
 }
 
-.filter-btn,
-.view-btn {
+.pill-btn {
   padding: 0.3125rem 0.8125rem;
   border: none;
   border-radius: 16px;
@@ -257,17 +254,17 @@ textarea { resize: vertical; min-height: 80px; }
   transition: background .15s, color .15s, box-shadow .15s;
 }
 
-.filter-btn:hover, .view-btn:hover { color: var(--text); background: var(--surface); }
-.filter-btn.active, .view-btn.active {
+.pill-btn:hover { color: var(--text); background: var(--surface); }
+.pill-btn.active {
   background: var(--surface);
   color: var(--text);
   box-shadow: var(--shadow-sm), 0 0 0 1px var(--border);
 }
 
-/* Domain-coloured active filter */
-.filter-btn.active[data-domain="home"] { color: var(--home); }
-.filter-btn.active[data-domain="work"] { color: var(--work); }
-.filter-btn.active[data-domain="apps"] { color: var(--apps); }
+/* Domain-coloured active pill */
+.pill-btn.active[data-domain="home"] { color: var(--home); }
+.pill-btn.active[data-domain="work"] { color: var(--work); }
+.pill-btn.active[data-domain="apps"] { color: var(--apps); }
 
 /* ── Status bar ────────────────────────────────────────────────────────────── */
 
@@ -595,8 +592,8 @@ textarea { resize: vertical; min-height: 80px; }
 
 @media (max-width: 480px) {
   .header-controls { gap: 0.5rem; }
-  .domain-filter, .view-switcher, .completion-filter { flex-wrap: wrap; }
-  .filter-btn, .view-btn { padding: 0.3rem 0.625rem; font-size: 0.75rem; }
+  .pill-group { flex-wrap: wrap; }
+  .pill-btn { padding: 0.3rem 0.625rem; font-size: 0.75rem; }
   .task-table th:nth-child(3),
   .task-table td:nth-child(3) { display: none; }
   dialog { padding: 1.25rem; }
