@@ -186,6 +186,9 @@ function playDoneSound() {
 
 function sortTasks(list) {
   return [...list].sort((a, b) => {
+    const aDone = a.status === 'done' ? 1 : 0;
+    const bDone = b.status === 'done' ? 1 : 0;
+    if (aDone !== bDone) return aDone - bDone;
     if (a.dueDate && b.dueDate) return a.dueDate.localeCompare(b.dueDate);
     if (a.dueDate) return -1;
     if (b.dueDate) return 1;
