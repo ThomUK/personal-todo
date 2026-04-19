@@ -15,6 +15,7 @@ let demoMode = false;
 let filterDomains = new Set(DOMAINS);
 let activeView = 'list';
 let activeScope = 'incomplete'; // 'all' | 'upcoming' | 'incomplete'
+let activeSortDir = 'asc'; // 'asc' = oldest first, 'desc' = newest first
 let editingId = null;
 let draggedId = null;
 
@@ -185,6 +186,7 @@ function playDoneSound() {
 // ── Kanban ────────────────────────────────────────────────────────────────────
 
 function sortTasks(list) {
+  const dir = activeSortDir === 'desc' ? -1 : 1;
   return [...list].sort((a, b) => {
     const aDone = a.status === 'done' ? 1 : 0;
     const bDone = b.status === 'done' ? 1 : 0;
@@ -192,7 +194,7 @@ function sortTasks(list) {
     if (a.dueDate && b.dueDate) return a.dueDate.localeCompare(b.dueDate);
     if (a.dueDate) return -1;
     if (b.dueDate) return 1;
-    return (a.createdAt || '').localeCompare(b.createdAt || '');
+    return dir * (a.createdAt || '').localeCompare(b.createdAt || '');
   });
 }
 
@@ -291,6 +293,7 @@ function resetFilters() {
   filterDomains = new Set(DOMAINS);
   activeScope = 'incomplete';
   activeView = 'list';
+  activeSortDir = 'asc';
   updateFilterButtons();
   document.querySelectorAll('.completion-filter .filter-btn').forEach(b => {
     const on = b.dataset.scope === activeScope;
@@ -299,6 +302,11 @@ function resetFilters() {
   });
   document.querySelectorAll('.view-btn').forEach(b => {
     const on = b.dataset.view === activeView;
+    b.classList.toggle('active', on);
+    b.setAttribute('aria-pressed', on);
+  });
+  document.querySelectorAll('.sort-filter .filter-btn').forEach(b => {
+    const on = b.dataset.sort === activeSortDir;
     b.classList.toggle('active', on);
     b.setAttribute('aria-pressed', on);
   });
@@ -561,6 +569,17 @@ function setupEvents() {
     if (!btn) return;
     activeScope = btn.dataset.scope;
     document.querySelectorAll('.completion-filter .filter-btn').forEach(b => {
+      b.classList.toggle('active', b === btn);
+      b.setAttribute('aria-pressed', b === btn);
+    });
+    renderAll();
+  });
+
+  document.querySelector('.sort-filter').addEventListener('click', e => {
+    const btn = e.target.closest('.filter-btn');
+    if (!btn) return;
+    activeSortDir = btn.dataset.sort;
+    document.querySelectorAll('.sort-filter .filter-btn').forEach(b => {
       b.classList.toggle('active', b === btn);
       b.setAttribute('aria-pressed', b === btn);
     });
