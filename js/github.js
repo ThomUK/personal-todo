@@ -11,6 +11,7 @@ function b64decode(str) {
 export async function loadBoard(token, owner, repo, branch, path) {
   const url = `${API}/repos/${owner}/${repo}/contents/${path}?ref=${encodeURIComponent(branch)}`;
   const res = await fetch(url, {
+    cache: 'no-store',
     headers: {
       Authorization: `Bearer ${token}`,
       Accept: 'application/vnd.github.v3+json',
