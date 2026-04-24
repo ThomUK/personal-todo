@@ -7,6 +7,7 @@
       "description": "The latch has been stiff since winter — needs WD-40 or replacement.",
       "domain": "home",
       "status": "todo",
+      "important": false,
       "dueDate": null,
       "createdAt": "2026-04-01T09:00:00.000Z",
       "updatedAt": "2026-04-01T09:00:00.000Z"
@@ -17,6 +18,7 @@
       "description": "",
       "domain": "work",
       "status": "in-progress",
+      "important": true,
       "dueDate": "2026-04-30",
       "createdAt": "2026-04-10T08:30:00.000Z",
       "updatedAt": "2026-04-15T11:00:00.000Z"
@@ -27,6 +29,7 @@
       "description": "Use prefers-color-scheme media query. Define a second set of CSS custom properties.",
       "domain": "apps",
       "status": "todo",
+      "important": false,
       "dueDate": null,
       "createdAt": "2026-04-12T20:00:00.000Z",
       "updatedAt": "2026-04-12T20:00:00.000Z"
@@ -37,6 +40,7 @@
       "description": "",
       "domain": "home",
       "status": "todo",
+      "important": true,
       "dueDate": "2026-05-01",
       "createdAt": "2026-04-14T07:45:00.000Z",
       "updatedAt": "2026-04-14T07:45:00.000Z"
@@ -47,6 +51,7 @@
       "description": "Cover the new reporting dashboard. Slides in Google Drive.",
       "domain": "work",
       "status": "done",
+      "important": true,
       "dueDate": "2026-04-17",
       "createdAt": "2026-04-07T09:00:00.000Z",
       "updatedAt": "2026-04-17T14:00:00.000Z"
@@ -57,6 +62,7 @@
       "description": "",
       "domain": "apps",
       "status": "done",
+      "important": false,
       "dueDate": null,
       "createdAt": "2026-03-20T10:00:00.000Z",
       "updatedAt": "2026-04-02T16:30:00.000Z"

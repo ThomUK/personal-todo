@@ -266,6 +266,32 @@ textarea { resize: vertical; min-height: 80px; }
 .pill-btn.active[data-domain="work"] { color: var(--work); }
 .pill-btn.active[data-domain="apps"] { color: var(--apps); }
 
+/* Important active pill */
+.pill-btn.active[data-importance="important"] { color: #f59e0b; }
+
+/* Important icon in list rows and kanban cards */
+.important-icon {
+  color: #f59e0b;
+  font-size: 0.75rem;
+  margin-right: 0.25rem;
+}
+
+/* Important checkbox in task dialog */
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  color: #f59e0b;
+  font-weight: 500;
+}
+.checkbox-label input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+  cursor: pointer;
+  accent-color: #f59e0b;
+}
+
 /* ── Status bar ────────────────────────────────────────────────────────────── */
 
 /* ── Demo banner ───────────────────────────────────────────────────────────── */

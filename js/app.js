@@ -16,6 +16,7 @@ let filterDomains = new Set(DOMAINS);
 let activeView = 'list';
 let activeScope = 'incomplete'; // 'all' | 'upcoming' | 'incomplete'
 let activeSortDir = 'asc'; // 'asc' = oldest first, 'desc' = newest first
+let filterImportance = 'all'; // 'all' | 'important' | 'normal'
 let editingId = null;
 let draggedId = null;
 
@@ -68,8 +69,10 @@ function esc(s) {
 }
 
 function filteredTasks() {
-  if (filterDomains.size === DOMAINS.length) return tasks;
-  return tasks.filter(t => filterDomains.has(t.domain));
+  let ft = filterDomains.size === DOMAINS.length ? tasks : tasks.filter(t => filterDomains.has(t.domain));
+  if (filterImportance === 'important') ft = ft.filter(t => t.important);
+  if (filterImportance === 'normal') ft = ft.filter(t => !t.important);
+  return ft;
 }
 
 // ── Config ────────────────────────────────────────────────────────────────────
@@ -152,12 +155,13 @@ function statusBadge(status) {
 function cardHTML(task) {
   const dc = dueDateClass(task);
   const dl = dueDateLabel(task);
+  const star = task.important ? '<span class="important-icon" aria-label="Important">★</span>' : '';
   return `
     <article class="task-card" data-id="${task.id}" data-domain="${task.domain}"
       data-status="${task.status}" draggable="true" role="listitem"
       tabindex="0" aria-label="${esc(task.title)}">
       <div class="task-card-header">
-        <span class="task-title">${esc(task.title)}</span>
+        <span class="task-title">${star}${esc(task.title)}</span>
         ${domainBadge(task.domain)}
       </div>
       ${dl ? `<div class="due-date-badge ${dc}">📅 ${esc(dl)}</div>` : ''}
@@ -234,7 +238,7 @@ function renderList() {
           ${t.status === 'done' ? '✓' : ''}
         </button>
       </td>
-      <td class="${t.status === 'done' ? 'done-title' : ''}">${esc(t.title)}</td>
+      <td class="${t.status === 'done' ? 'done-title' : ''}">${t.important ? '<span class="important-icon" aria-label="Important">★</span>' : ''}${esc(t.title)}</td>
       <td>${domainBadge(t.domain)}</td>
       <td>${statusBadge(t.status)}</td>
       <td>${t.dueDate
@@ -294,6 +298,7 @@ function resetFilters() {
   activeScope = 'incomplete';
   activeView = 'list';
   activeSortDir = 'asc';
+  filterImportance = 'all';
   updateFilterButtons();
   document.querySelectorAll('.completion-filter .pill-btn').forEach(b => {
     const on = b.dataset.scope === activeScope;
@@ -307,6 +312,11 @@ function resetFilters() {
   });
   document.querySelectorAll('.sort-filter .pill-btn').forEach(b => {
     const on = b.dataset.sort === activeSortDir;
+    b.classList.toggle('active', on);
+    b.setAttribute('aria-pressed', on);
+  });
+  document.querySelectorAll('.importance-filter .pill-btn').forEach(b => {
+    const on = b.dataset.importance === filterImportance;
     b.classList.toggle('active', on);
     b.setAttribute('aria-pressed', on);
   });
@@ -331,6 +341,7 @@ function openTaskDialog(taskId = null, defaultStatus = 'todo') {
     form.domain.value = t.domain;
     form.status.value = t.status;
     form.dueDate.value = t.dueDate || '';
+    form.important.checked = !!t.important;
     deleteBtn.hidden = false;
   } else {
     titleEl.textContent = 'Add Task';
@@ -530,6 +541,7 @@ function setupEvents() {
       domain: fd.get('domain'),
       status: fd.get('status'),
       dueDate: fd.get('dueDate') || null,
+      important: fd.get('important') === 'on',
     };
     const idToEdit = editingId;
     closeTaskDialog();
@@ -580,6 +592,17 @@ function setupEvents() {
     if (!btn) return;
     activeSortDir = btn.dataset.sort;
     document.querySelectorAll('.sort-filter .pill-btn').forEach(b => {
+      b.classList.toggle('active', b === btn);
+      b.setAttribute('aria-pressed', b === btn);
+    });
+    renderAll();
+  });
+
+  document.querySelector('.importance-filter').addEventListener('click', e => {
+    const btn = e.target.closest('.pill-btn');
+    if (!btn) return;
+    filterImportance = btn.dataset.importance;
+    document.querySelectorAll('.importance-filter .pill-btn').forEach(b => {
       b.classList.toggle('active', b === btn);
       b.setAttribute('aria-pressed', b === btn);
     });
