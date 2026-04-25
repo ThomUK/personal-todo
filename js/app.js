@@ -198,6 +198,9 @@ function sortTasks(list) {
     if (a.dueDate && b.dueDate) return a.dueDate.localeCompare(b.dueDate);
     if (a.dueDate) return -1;
     if (b.dueDate) return 1;
+    const aImp = a.important ? 0 : 1;
+    const bImp = b.important ? 0 : 1;
+    if (aImp !== bImp) return aImp - bImp;
     return dir * (a.createdAt || '').localeCompare(b.createdAt || '');
   });
 }
